@@ -56,6 +56,7 @@ init:
   - copy c:\MinGW\bin\mingw32-make.exe c:\MinGW\bin\make.exe
   - cmd: ECHO Path - %PATH%
   - ps: cp C:\Python35\python.exe C:\Python35\python3
+  - C:\Python35\python3 app-shell\scripts\release_stable.py
 
 install:
   - cmd: "%PIP2% freeze"
