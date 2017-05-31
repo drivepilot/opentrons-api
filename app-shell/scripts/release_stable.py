@@ -1,6 +1,5 @@
 import os
 
-from build_electron_app_with_builder import build_electron_app
 import util
 
 
