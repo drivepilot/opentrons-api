@@ -9,11 +9,12 @@ def build_app():
 
 
 def is_tc_tag():
-    res = util.get_cmd_value('git describe --exact-match --tags HEAD')
-    print('TAG value on TC is', res)
-    if res.startswith('fatal'):
+    try:
+        res = util.get_cmd_value('git describe --exact-match --tags HEAD')
+        return True
+    except Exception as e:
+        print('Could not detect TC tag')
         return False
-    return True
 
 
 if __name__ == '__main__':
