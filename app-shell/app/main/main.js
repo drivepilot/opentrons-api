@@ -3,17 +3,15 @@ const child_process = require('child_process')
 const fs = require('fs')
 const http = require('http')
 const path = require('path')
-const urlJoin = require('url-join')
 
 const electron = require('electron')
 const rp = require('request-promise')
-const {app, BrowserWindow, ipcMain} = electron
+const {app, BrowserWindow} = electron
 
 const {addMenu} = require('./menu.js')
 const {getLogger} = require('./logging.js')
 const {initAutoUpdater} = require('./updater.js')
 const {ServerManager} = require('./servermanager.js')
-const {PythonEnvManager} = require('./envmanager.js')
 const {waitUntilServerResponds} = require('./util.js')
 
 let appWindowUrl = 'http://localhost:31950/'

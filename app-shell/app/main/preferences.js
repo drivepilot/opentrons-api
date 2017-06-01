@@ -15,6 +15,10 @@ settings.on('create', pathToSettings => {
   }
 })
 
+function getChannel() {
+  return getSetting('useBetaApp') ? 'beta' : 'stable'
+}
+
 function getSetting (setting) {
   return settings.getSync(setting)
 }
@@ -24,6 +28,7 @@ function toggleSetting (setting) {
 }
 
 module.exports = {
+  getChannel,
   getSetting,
   toggleSetting
 }

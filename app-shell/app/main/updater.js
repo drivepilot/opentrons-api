@@ -6,9 +6,9 @@ const {getLogger} = require('./logging.js')
 
 autoUpdater.allowDowngrade = true
 
-let channel = getSetting('useBetaApp') ? 'beta' : 'stable'
 
 function initAutoUpdater () {
+
   // Log whats happening
   const log = require('electron-log')
   log.transports.file.level = 'info'
