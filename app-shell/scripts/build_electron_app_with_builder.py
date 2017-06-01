@@ -94,7 +94,7 @@ def remove_directory(dir_to_remove):
         print(script_tab + "Directory %s was not found." % dir_to_remove)
 
 
-def get_build_tag(os_type):
+def get_build_tag(os_type, app_version):
     """
     Gets the OS, CPU architecture (32 vs 64 bit), and current time stamp and
     appends CI branch, commit, or pull request info
@@ -125,8 +125,6 @@ def get_build_tag(os_type):
             branch_var='APPVEYOR_REPO_BRANCH',
             commit_var='APPVEYOR_REPO_COMMIT'
         )
-
-    app_version = get_app_version_with_build()
 
     build_tag = "v{app_version}-{arch_time_stamp}".format(
         app_version=app_version,
@@ -319,5 +317,5 @@ if __name__ == '__main__':
         update_pkg_json_app_version(get_app_version_with_build_encoded())
 
     build_electron_app()
-    build_tag = get_build_tag(util.get_os())
+    build_tag = get_build_tag(util.get_os(), get_app_version_with_build())
     clean_build_dist(build_tag)
