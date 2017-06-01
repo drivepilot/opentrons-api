@@ -32,14 +32,16 @@ def get_app_version():
     """
 
     import opentrons
-    semver_match = re.match(r'[(\d+)\.]+\+(\d+)', opentrons.__version__)
+    semver_match = re.match(r'[(\d+)\.]+(?:\+(\d+))?', opentrons.__version__)
     app_version = semver_match.group(0)
     version, build = app_version.split('+')
     major, minor, patch = version.split('.')
 
     # encode patch/build
-    fake_patch = cantor.cantor_calculate(int(patch), int(build))
-    fake_app_version = '{}.{}.{}'.format(major, minor, fake_patch)
+    fake_app_version = app_version
+    if build and patch:
+        fake_patch = cantor.cantor_calculate(int(patch), int(build))
+        fake_app_version = '{}.{}.{}'.format(major, minor, fake_patch)
 
     app_json_path = os.path.join(project_root_dir, "app", "package.json")
     with open(app_json_path, 'r') as json_file:
