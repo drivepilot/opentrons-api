@@ -1,11 +1,13 @@
 import os
 
 import util
+import build_electron_app_with_builder as builder
 
 
 def build_app():
     os.environ['CHANNEL'] = 'stable'
-    print('releasing app...')
+    builder.update_pkg_json_app_version(builder.get_app_version())
+    builder.build_electron_app()
 
 
 def is_tc_tag():
@@ -27,3 +29,5 @@ if __name__ == '__main__':
     elif is_tc_tag():
         print('*** Detected TeamCity Tag')
         build_app()
+    else:
+        print('*** Tag not detected; Not releasing app')
