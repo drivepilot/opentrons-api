@@ -312,11 +312,7 @@ if __name__ == '__main__':
     else:
         os.environ['CHANNEL'] = 'dev'
 
-    if os.environ.get('CHANNEL') == 'stable':
-        update_pkg_json_app_version(get_app_version())
-    elif os.environ.get('CHANNEL') == 'beta':
-        update_pkg_json_app_version(get_app_version_with_build_encoded())
-
+    update_pkg_json_app_version(get_app_version_with_build_encoded())
     build_electron_app()
     build_tag = get_build_tag(util.get_os(), get_app_version_with_build())
     clean_build_dist(build_tag)
