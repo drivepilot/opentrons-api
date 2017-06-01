@@ -50,6 +50,7 @@ def get_app_version_with_build_encoded():
     """
     import opentrons
     major, minor, patch, build = get_version_parts(opentrons.__version__)
+    print('version parts are', major, minor, patch, build)
 
     # Encode patch into build if build and patch exist
     if build:
