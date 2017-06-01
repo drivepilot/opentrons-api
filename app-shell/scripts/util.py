@@ -92,6 +92,19 @@ def get_build_tag(os_type):
     return build_tag
 
 
+def is_ci():
+    return (
+        os.environ.get('CI') or  # Travis CI, AppVeyor, CircleCi, Gitlab
+        os.environ.get('CONTINUOUS_INTEGRATION') or  # TravisCI
+        os.environ.get('BUILD_NUMBER') or  # TeamCity, Jenkins
+        False
+    )
+
+
+def is_master_branch():
+    return get_branch().strip() == 'master'
+
+
 def tag_from_ci_env_vars(ci_name, pull_request_var, branch_var, commit_var):
     pull_request = os.environ.get(pull_request_var)
     branch = os.environ.get(branch_var)

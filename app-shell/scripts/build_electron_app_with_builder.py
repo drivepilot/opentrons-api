@@ -27,32 +27,62 @@ project_root_dir = \
 
 def get_app_version():
     """
-    Get the OT App version as specified in the electron package.json file
-    :return: string of app version
+    Returns OT App version from versioneer
+    E.g: "2.4.0"
     """
-
     import opentrons
-    semver_match = re.match(r'[(\d+)\.]+(?:\+(\d+))?', opentrons.__version__)
-    app_version = semver_match.group(0)
-    version, build = app_version.split('+')
-    major, minor, patch = version.split('.')
+    return opentrons.__version__.split('+')[0]
 
-    # encode patch/build
-    fake_app_version = app_version
-    if build and patch:
-        fake_patch = cantor.cantor_calculate(int(patch), int(build))
-        fake_app_version = '{}.{}.{}'.format(major, minor, fake_patch)
 
+def get_app_version_with_build():
+    """
+    Returns OT App version from versioneer with build
+    E.g: "2.4.0+5"
+    """
+    import opentrons
+    return '{}.{}.{}+{}'.format(*get_version_parts(opentrons.__version__))
+
+
+def get_app_version_with_build_encoded():
+    """
+    Returns OT App version with patch and build numbers encoded into the
+    patch number
+    """
+    import opentrons
+    major, minor, patch, build = get_version_parts(opentrons.__version__)
+
+    # Encode patch into build if build and patch exist
+    if build:
+        patch = cantor.cantor_calculate(int(patch), int(build))
+
+    return '{}.{}.{}'.format(major, minor, patch)
+
+
+def update_pkg_json_app_version(version):
+    """
+    Overwrites app/package.json "version" attribute for electron-builder
+    """
     app_json_path = os.path.join(project_root_dir, "app", "package.json")
     with open(app_json_path, 'r') as json_file:
         app_json = json.load(json_file, object_pairs_hook=OrderedDict)
 
-    real_app_version = app_json['version']
-    app_json['version'] = fake_app_version
+    app_json['version'] = version
     with open(app_json_path, 'w') as json_file:
         json.dump(app_json, json_file, indent=2)
 
-    return real_app_version
+
+def get_version_parts(version):
+    # matches: "2.4.0" or "2.4.0+55"
+    semver_match = re.match(r'[(\d+)\.]+(?:\+(\d+))?', version)
+    version = semver_match.group(0)
+
+    if '+' in version:
+        version, build = version.split('+')
+    else:
+        build = None
+
+    major, minor, patch = version.split('.')
+    return (major, minor, patch, build)
 
 
 def remove_directory(dir_to_remove):
@@ -96,7 +126,7 @@ def get_build_tag(os_type):
             commit_var='APPVEYOR_REPO_COMMIT'
         )
 
-    app_version = get_app_version()
+    app_version = get_app_version_with_build()
 
     build_tag = "v{app_version}-{arch_time_stamp}".format(
         app_version=app_version,
@@ -161,9 +191,8 @@ def build_electron_app():
         "--{}".format(util.get_arch())
     ]
 
+    # If on master branch, publish artifact
     if util.get_branch().strip() == 'master' or os.environ.get('PUBLISH'):
-        if 'CHANNEL' not in os.environ:
-            os.environ['CHANNEL'] = 'beta'
         process_args.extend(["-p", "always"])
 
     print(process_args)
@@ -194,6 +223,7 @@ def build_electron_app():
         util.republish_win_s3(yml_file, exe_file)
 
     print(script_tab + 'electron-builder process completed successfully')
+
 
 def clean_build_dist(build_tag):
     """
@@ -274,7 +304,20 @@ def clean_build_dist(build_tag):
 
 if __name__ == '__main__':
     print('Detected branch is', util.get_branch(), util.get_branch() == 'master')
-    get_app_version()
+    if (
+            'CHANNEL' not in os.environ and
+            util.is_ci() and
+            util.is_master_branch()
+    ):
+        os.environ['CHANNEL'] = 'beta'
+    else:
+        os.environ['CHANNEL'] = 'dev'
+
+    if os.environ.get('CHANNEL') == 'stable':
+        update_pkg_json_app_version(get_app_version())
+    elif os.environ.get('CHANNEL') == 'beta':
+        update_pkg_json_app_version(get_app_version_with_build_encoded())
+
     build_electron_app()
     build_tag = get_build_tag(util.get_os())
     clean_build_dist(build_tag)
