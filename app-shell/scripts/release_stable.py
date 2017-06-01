@@ -6,6 +6,7 @@ import build_electron_app_with_builder as builder
 
 def build_app():
     os.environ['CHANNEL'] = 'stable'
+    os.environ['PUBLISH'] = 'true'
     builder.update_pkg_json_app_version(builder.get_app_version())
     builder.build_electron_app()
 
