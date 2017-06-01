@@ -30,7 +30,7 @@ function createWindow (windowUrl) {
     width: 1060,
     height: 750
   })
-  mainWindow.loadURL(windowUrl)
+  mainWindow.loadURL(windowUrl, {"extraHeaders" : "pragma: no-cache\n"})
   mainWindow.on('closed', function () {
     mainWindow = null
     app.quit()
