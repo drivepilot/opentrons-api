@@ -75,15 +75,17 @@ def update_pkg_json_app_version(version):
 
 def get_version_parts(version):
     # matches: "2.4.0" or "2.4.0+55"
-    semver_match = re.match(r'[(\d+)\.]+(?:\+(\d+))?', version)
-    version = semver_match.group(0)
+
+    rest = version
+    major, rest = rest.split('.', 1)
+    minor, rest = rest.split('.', 1)
+    patch = rest.split('+')[0]
 
     if '+' in version:
-        version, build = version.split('+')
+        rest = version.split('+')[1]
+        build, = version.split('.', 1)[0]
     else:
         build = None
-
-    major, minor, patch = version.split('.')
     return (major, minor, patch, build)
 
 
