@@ -32,12 +32,14 @@ app-shell-setup:
 app-shell-build:
 	cd app-shell &&\
 		npm run build:frontend &&\
+		npm run publish:posix &&\
 		ls dist/* &&\
 		ls releases
 
 app-shell-build-win:
 	cd app-shell &&\
 		npm run build:frontend:win &&\
+		npm run publish:win &&\
 		ls dist/* &&\
 		ls releases
 
