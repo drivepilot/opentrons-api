@@ -193,6 +193,8 @@ def build_electron_app():
     # If on master branch, publish artifact
     if util.get_branch().strip() == 'master' or os.environ.get('PUBLISH'):
         process_args.extend(["-p", "always"])
+    if 'CHANNEL' not in os.environ:
+        os.environ['CHANNEL'] = 'dev'
 
     print(process_args)
 
