@@ -8,8 +8,6 @@ npm config set python /usr/bin/python
 # Create python3 env
 virtualenv -p python3 venv && source venv/bin/activate
 
-python3 app-shell/scripts/release_stable.py
-
 # Build app src
 make app
 
