@@ -7,6 +7,10 @@ const {getLogger} = require('./logging.js')
 autoUpdater.allowDowngrade = true
 
 
+function isBetaApp() {
+  return getChannel() === 'beta'
+}
+
 function initAutoUpdater () {
   const channel = getChannel()
 
@@ -42,7 +46,7 @@ function initAutoUpdater () {
     'update-downloaded', (e, info) => {
       mainLogger.info(`Update downloaded: ${info}`)
 
-      if (channel === 'beta') {
+      if (isBetaApp()) {
         // Do not automatically quit
         // setTimeout(() => autoUpdater.quitAndInstall(), 1);
         return
@@ -68,7 +72,7 @@ function initAutoUpdater () {
     channel: channel
   })
 
-  if (getSetting('autoUpdate')) {
+  if (getSetting('autoUpdate') || isBetaApp()) {
     mainLogger.info('Auto updating is enabled, checking for updates')
     autoUpdater.checkForUpdates()
   } else {

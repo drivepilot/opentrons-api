@@ -196,8 +196,6 @@ def build_electron_app():
     # If on master branch, publish artifact
     if util.get_branch().strip() == 'master' or os.environ.get('PUBLISH'):
         process_args.extend(["-p", "always"])
-    if 'CHANNEL' not in os.environ:
-        os.environ['CHANNEL'] = 'dev'
 
     print(process_args)
 
@@ -314,7 +312,7 @@ if __name__ == '__main__':
             util.is_master_branch()
     ):
         os.environ['CHANNEL'] = 'beta'
-    else:
+    elif 'CHANNEL' not in os.environ:
         os.environ['CHANNEL'] = 'dev'
 
     update_pkg_json_app_version(get_app_version_with_build_encoded())
