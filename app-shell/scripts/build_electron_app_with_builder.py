@@ -313,7 +313,8 @@ if __name__ == '__main__':
     ):
         os.environ['CHANNEL'] = 'beta'
     elif 'CHANNEL' not in os.environ:
-        os.environ['CHANNEL'] = 'dev'
+        # os.environ['CHANNEL'] = 'dev'
+        os.environ['CHANNEL'] = 'beta'
 
     update_pkg_json_app_version(get_app_version_with_build_encoded())
     build_electron_app()
