@@ -11,9 +11,21 @@ function isBetaApp() {
   return getChannel() === 'beta'
 }
 
-function initAutoUpdater () {
-  const channel = getChannel()
+function setFeedURL(autoUpdater, channel) {
+  autoUpdater.setFeedURL({
+    provider: 's3',
+    bucket: 'ot-app-builds',
+    path: `channels/${channel}`,
+    channel: channel
+  })
+}
 
+function checkForUpdates(autoUpdater) {
+  setFeedURL(autoUpdater, getChannel())
+  autoUpdater.checkForUpdates()
+}
+
+function initAutoUpdater () {
   // Log whats happening
   const log = require('electron-log')
   log.transports.file.level = 'info'
@@ -65,16 +77,14 @@ function initAutoUpdater () {
     }
   )
 
-  autoUpdater.setFeedURL({
-    provider: 's3',
-    bucket: 'ot-app-builds',
-    path: `channels/${channel}`,
-    channel: channel
+  autoUpdater.on('channel-changed', () => {
+    mainLogger.info('[updater] channel changed event')
+    setFeedURL(autoUpdater, getChannel())
   })
 
   if (getSetting('autoUpdate') || isBetaApp()) {
     mainLogger.info('Auto updating is enabled, checking for updates')
-    autoUpdater.checkForUpdates()
+    checkForUpdates(autoUpdater)
   } else {
     mainLogger.info('Auto updating disabled in settings, skipping checkForUpdates')
   }

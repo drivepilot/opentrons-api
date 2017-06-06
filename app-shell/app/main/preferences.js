@@ -33,7 +33,7 @@ function toggleSetting (setting) {
 
   switch (setting) {
     case "useBetaApp":
-      autoUpdater.checkForUpdates()
+      autoUpdater.emit('channel-changed')
       break
   }
 }
