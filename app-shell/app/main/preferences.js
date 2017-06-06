@@ -33,9 +33,7 @@ function toggleSetting (setting) {
 
   switch (setting) {
     case "useBetaApp":
-      if (getSetting(setting)) {
-        autoUpdater.checkForUpdates()
-      }
+      autoUpdater.checkForUpdates()
       break
   }
 }
