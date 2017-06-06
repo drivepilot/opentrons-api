@@ -54,7 +54,7 @@ def get_app_version_with_build_encoded():
 
     # Encode patch into build if build and patch exist
     if build:
-        patch = cantor.cantor_calculate(int(patch), int(build))
+        patch = cantor.cantor_calculate(int(patch), int(build)) + 1000
 
     return '{}.{}.{}'.format(major, minor, patch)
 
@@ -68,7 +68,7 @@ def update_pkg_json_app_version(version):
         app_json = json.load(json_file, object_pairs_hook=OrderedDict)
 
     print(script_tab, 'Writing app version to file:', version)
-    app_json['version'] = version
+    app_json['version'] = '2.4.3'
     with open(app_json_path, 'w') as json_file:
         json.dump(app_json, json_file, indent=2)
 
@@ -83,7 +83,7 @@ def get_version_parts(version):
 
     if '+' in version:
         rest = version.split('+')[1]
-        build, = version.split('.', 1)[0]
+        build = version.split('.', 1)[0]
     else:
         build = None
     return (major, minor, patch, build)

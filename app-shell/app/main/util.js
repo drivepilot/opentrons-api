@@ -25,12 +25,14 @@ const cantorReverse = (z) => {
 }
 
 const getAppVersion = (version, channel) => {
-  if (channel !== 'beta') {
-    return version
+  const [major, minor, patch] = version.split('.')
+  const p = parseInt(patch)
+  if (p - 1000 >= 0) {
+    const [patch, buildNumber] = cantorReverse(p - 1000)
+    return `${major}.${minor}.${patch}+${buildNumber}`
+  } else {
+    return `${major}.${minor}.${p}`
   }
-  const [major, minor, fakePatch] = version.split('.')
-  const [patch, buildNumber] = cantorReverse(parseInt(fakePatch))
-  return `${major}.${minor}.${patch}+${buildNumber}`
 }
 
 module.exports = {getAppVersion, waitUntilServerResponds}
