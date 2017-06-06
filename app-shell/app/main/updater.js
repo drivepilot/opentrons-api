@@ -1,13 +1,14 @@
 const electron = require('electron')
 const {app, dialog} = electron
 const {autoUpdater} = require('electron-updater')
-const {getSetting} = require('./preferences')
+const {getChannel, getSetting} = require('./preferences')
 const {getLogger} = require('./logging.js')
 
 autoUpdater.allowDowngrade = true
 
 
 function initAutoUpdater () {
+  const channel = getChannel()
 
   // Log whats happening
   const log = require('electron-log')
