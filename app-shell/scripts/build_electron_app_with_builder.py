@@ -63,7 +63,7 @@ def update_pkg_json_app_version(version):
     """
     Overwrites app/package.json "version" attribute for electron-builder
     """
-    print('&&&&%%%% Attempting to write version:', version)
+    print(script_tab, 'Writing app version to file:', version)
     app_json_path = os.path.join(project_root_dir, "app", "package.json")
     with open(app_json_path, 'r') as json_file:
         app_json = json.load(json_file, object_pairs_hook=OrderedDict)
