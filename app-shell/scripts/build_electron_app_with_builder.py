@@ -68,7 +68,7 @@ def update_pkg_json_app_version(version):
         app_json = json.load(json_file, object_pairs_hook=OrderedDict)
 
     print(script_tab, 'Writing app version to file:', version)
-    app_json['version'] = '2.4.3'
+    app_json['version'] = version
     with open(app_json_path, 'w') as json_file:
         json.dump(app_json, json_file, indent=2)
 
