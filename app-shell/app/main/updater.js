@@ -80,6 +80,7 @@ function initAutoUpdater () {
   autoUpdater.on('channel-changed', () => {
     mainLogger.info('[updater] channel changed event')
     setFeedURL(autoUpdater, getChannel())
+    checkForUpdates(autoUpdater)
   })
 
   if (getSetting('autoUpdate') || isBetaApp()) {
