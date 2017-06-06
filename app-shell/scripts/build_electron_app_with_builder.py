@@ -63,11 +63,11 @@ def update_pkg_json_app_version(version):
     """
     Overwrites app/package.json "version" attribute for electron-builder
     """
-    print(script_tab, 'Writing app version to file:', version)
     app_json_path = os.path.join(project_root_dir, "app", "package.json")
     with open(app_json_path, 'r') as json_file:
         app_json = json.load(json_file, object_pairs_hook=OrderedDict)
 
+    print(script_tab, 'Writing app version to file:', version)
     app_json['version'] = version
     with open(app_json_path, 'w') as json_file:
         json.dump(app_json, json_file, indent=2)
@@ -214,15 +214,15 @@ def build_electron_app():
         raise SystemExit(script_tag + 'Failed to properly build electron app')
 
     # Run windows repulish
-    if platform_type == 'win' and 'always' in process_args:
-        print(os.listdir(os.path.join(project_root_dir, 'dist')))
-        yml_file = os.path.join(
-            project_root_dir, 'dist', '{}.yml'.format(os.environ['CHANNEL'])
-        )
-        exe_file = glob.glob(
-            os.path.join(project_root_dir, 'dist', '*.exe')
-        )[0]
-        util.republish_win_s3(yml_file, exe_file)
+    # if platform_type == 'win' and 'always' in process_args:
+    #     print(os.listdir(os.path.join(project_root_dir, 'dist')))
+    #     yml_file = os.path.join(
+    #         project_root_dir, 'dist', '{}.yml'.format(os.environ['CHANNEL'])
+    #     )
+    #     exe_file = glob.glob(
+    #         os.path.join(project_root_dir, 'dist', '*.exe')
+    #     )[0]
+    #     util.republish_win_s3(yml_file, exe_file)
 
     print(script_tab + 'electron-builder process completed successfully')
 
