@@ -46,6 +46,10 @@ function createWindow (windowUrl) {
         app.quit()
       })
   })
+  mainWindow.on('unresponsive', function () {
+    mainLogger.info('window is unresponsive, reloading')
+    setTimeout(mainWindow.reload, 500)
+  })
   // Note: Auth0 pop window does not close itself, this will this window when it pops up
   setInterval(() => {
     BrowserWindow.getAllWindows()
